@@ -1,0 +1,131 @@
+If no file can be loaded, returns sane defaults.
+    """
+    if custom_path:
+        path = Path(custom_path).expanduser().resolve()
+        if path.exists():
+            return _read_json(path)
+        else:
+            raise FileNotFoundError(f"Settings file not found at {path}")
+
+    config_dir = Path(__file__).resolve().parent.parent / "config"
+    primary = config_dir / "settings.json"
+    fallback = config_dir / "settings.example.json"
+
+    if primary.exists():
+        return _read_json(primary)
+    if fallback.exists():
+        return _read_json(fallback)
+
+    # Fallback defaults
+    return {
+        "user_agent": "Mozilla/5.0 (compatible; ZoomInfoScraper/1.0; +https://example.com)",
+        "request_timeout": 15,
+        "request_delay": 1,
+        "log_level": "INFO",
+        "zoominfo": {
+            "base_url": "https://www.zoominfo.com",
+            "headers": {},
+        },
+    }
+
+def _read_json(path: Path) -> Dict[str, Any]:
+    with path.open("r", encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid JSON in settings file {path}: {exc}") from exc
+
+def get_logger(name: str, level: str = "INFO") -> logging.Logger:
+    """
+    Returns a configured logger with the given name and log level.
+    """
+    logger = logging.getLogger(name)
+    if logger.handlers:
+        # Logger already configured
+        logger.setLevel(_level_from_string(level))
+        return logger
+
+    logger.setLevel(_level_from_string(level))
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        fmt="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.propagate = False
+    return logger
+
+def _level_from_string(level: str) -> int:
+    mapping = {
+        "CRITICAL": logging.CRITICAL,
+        "ERROR": logging.ERROR,
+        "WARNING": logging.WARNING,
+        "INFO": logging.INFO,
+        "DEBUG": logging.DEBUG,
+    }
+    return mapping.get(level.upper(), logging.INFO)
+
+def clean_text(value: Optional[str]) -> str:
+    if value is None:
+        return ""
+    text = " ".join(str(value).split())
+    return text.strip()
+
+def parse_int(value: Optional[str]) -> Optional[int]:
+    if not value:
+        return None
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    if not digits:
+        return None
+    try:
+        return int(digits)
+    except ValueError:
+        return None
+
+def parse_currency_value(amount_str: Optional[str], currency_hint: Optional[str] = None) -> Tuple[Optional[float], Optional[str]]:
+    """
+    Parses a currency amount and optional currency code.
+
+    Returns (amount, currency_code).
+    """
+    if not amount_str:
+        return None, currency_hint
+
+    cleaned = amount_str.replace(",", "").strip()
+    multiplier = 1.0
+    if cleaned.lower().endswith("k"):
+        multiplier = 1_000.0
+        cleaned = cleaned[:-1]
+    elif cleaned.lower().endswith("m"):
+        multiplier = 1_000_000.0
+        cleaned = cleaned[:-1]
+    elif cleaned.lower().endswith("b"):
+        multiplier = 1_000_000_000.0
+        cleaned = cleaned[:-1]
+
+    try:
+        value = float(cleaned) * multiplier
+    except ValueError:
+        return None, currency_hint
+
+    currency_code = None
+    if currency_hint and isinstance(currency_hint, str) and len(currency_hint) == 3:
+        currency_code = currency_hint.upper()
+
+    # If there's no hint, default to USD
+    if currency_code is None:
+        currency_code = "USD"
+    return value, currency_code
+
+def safe_get(obj: Dict[str, Any], key: str, default: Any = None) -> Any:
+    """
+    Safe dict.get that also checks for case-insensitive keys.
+    """
+    if key in obj:
+        return obj[key]
+    lower_key = key.lower()
+    for k, v in obj.items():
+        if isinstance(k, str) and k.lower() == lower_key:
+            return v
+    return default
