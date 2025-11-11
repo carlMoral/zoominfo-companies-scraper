@@ -1,0 +1,18 @@
+{
+  "request": {
+    "timeout": 20,
+    "concurrency": 5,
+    "user_agent": "ZoomInfoCompaniesScraper/1.0 (+https://bitbash.dev)"
+  },
+  "output": {
+    "directory": "../data",
+    "formats": ["json", "csv"],
+    "filename_prefix": "zoominfo_companies"
+  },
+  "logging": {
+    "level": "INFO"
+  },
+  "zoominfo": {
+    "base_url": "https://www.zoominfo.com"
+  }
+}
