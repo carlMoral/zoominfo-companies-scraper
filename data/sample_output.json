@@ -1,0 +1,67 @@
+[
+  {
+    "url": "https://www.zoominfo.com/c/immersed-games/358891608",
+    "id": "358891608",
+    "name": "Immersed Games",
+    "description": "Immersed Games is harnessing the engaging power of video games to create a next generation STEM learning platform.",
+    "revenue": 5000000,
+    "revenue_currency": "USD",
+    "stock_symbol": null,
+    "website": "https://www.immersedgames.com/",
+    "employees": 25,
+    "industry": [
+      "Software General",
+      "Software"
+    ],
+    "headquarters": "640 Ellicott St Ste 108, Buffalo, New York",
+    "phone_number": "(352) 641-0730",
+    "total_funding_amount": 5000000,
+    "most_recent_funding_amount": null,
+    "funding_currency": "USD",
+    "funding_rounds": null,
+    "leadership": [
+      {
+        "name": "Lindsey Tropf",
+        "title": "Founder & CEO",
+        "url": "https://www.zoominfo.com/p/Lindsey-Tropf/2014457181"
+      }
+    ],
+    "popular_searches": [],
+    "business_classification_codes": [],
+    "total_employees": 25,
+    "c_level_employees": null,
+    "vp_level_employees": null,
+    "director_level_employees": null,
+    "manager_level_employees": null,
+    "non_manager_employees": null,
+    "top_contacts": null,
+    "org_chart": [],
+    "social_media": [
+      "http://www.linkedin.com/company/immersed-games",
+      "https://www.twitter.com/immersedgames",
+      "https://www.facebook.com/immersedgames"
+    ],
+    "ceo_rating": null,
+    "enps_score": null,
+    "similar_companies": [],
+    "email_formats": [],
+    "products_owned": [],
+    "tech_stack": [
+      {
+        "company_name": "Intuit",
+        "tech_name": "MailChimp"
+      },
+      {
+        "company_name": "Eploy",
+        "tech_name": "Eploy"
+      }
+    ],
+    "recent_scoops": [],
+    "news_and_media": [
+      {
+        "title": "More than $3 million in free classroom supplies launched via ClassTag Marketplace",
+        "url": "https://www.businesswire.com/news/home/20180807005526/en/3-Million-Free-Classroom-Supplies-Teachers-ClassTag/"
+      }
+    ]
+  }
+]
